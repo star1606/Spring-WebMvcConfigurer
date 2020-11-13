@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest
 @WebMvcTest
 public class SampleControllerTest {
 	
@@ -20,10 +22,18 @@ public class SampleControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 	
+	@Autowired
+	PersonRepository personRepository;
+	
 	@Test
 	public void hello() throws Exception {
+		Person person = new Person();
+		person.setName("lee");
+		Person savedPerson = personRepository.save(person);
+		
 		this.mockMvc.perform(get("/hello/lee"))
-			.andDo(print());
+			//	.param("id", savedPerson.getId().toString()) 작동안된
+				.andDo(print());
 			//.andExpect(content().string("hello")); 이거 작동안됨
 	}
 	
